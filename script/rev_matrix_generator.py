@@ -72,7 +72,6 @@ def case(c1, c2):
         print("\tQcodons[cod][%d][%d] := Q[%d][%d] * sqrt(fitness[cod][%d]/fitness[cod][%d])" %
               (c1+1, c2+1, reverse_bases[d[0][0]]+1, reverse_bases[d[0][1]]+1, reverse_aas[amino_acids[c2]]+1, reverse_aas[amino_acids[c1]]+1))
 
-
 def print_all():
     print("for (cod in 1:nsites) {")
     print("  for (i in 1:64) {")
