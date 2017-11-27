@@ -1,11 +1,9 @@
-#!/usr/bin/python3.5
-
-# Copyright or © or Copr. Centre National de la Recherche Scientifique (CNRS) (2017/05/03)
+# Copyright or © or Copr. Centre National de la Recherche Scientifique (CNRS) (2017/11/27)
 # Contributors:
 # - Vincent Lanore <vincent.lanore@gmail.com>
 
-# This software is a computer program whose purpose is to provide the necessary classes to write ligntweight component-based
-# c++ applications.
+# This software is a computer program whose purpose is to provide small tools and scripts related to phylogeny and bayesian
+# inference.
 
 # This software is governed by the CeCILL-B license under French law and abiding by the rules of distribution of free software.
 # You can use, modify and/ or redistribute the software under the terms of the CeCILL-B license as circulated by CEA, CNRS and
