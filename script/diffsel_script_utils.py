@@ -1,4 +1,4 @@
-# Copyright or © or Copr. Centre National de la Recherche Scientifique (CNRS) (2017/11/27)
+# Copyright or Copr. Centre National de la Recherche Scientifique (CNRS) (2017/11/27)
 # Contributors:
 # - Vincent Lanore <vincent.lanore@gmail.com>
 
@@ -60,6 +60,9 @@ else:
 def boldred(string):
     return bcolors.FAIL+bcolors.BOLD+string+bcolors.ENDC
 
+def boldcyan(string):
+    return bcolors.CYAN+bcolors.BOLD+string+bcolors.ENDC
+
 def param(myparam):
     return bcolors.OKBLUE+str(myparam)+bcolors.ENDC
 
@@ -84,6 +87,8 @@ def success(string):
 def failure(string):
     return "-- ["+boldred("FAILURE")+"] "+string
 
+def ask_input(string):
+    return "-- ["+boldcyan("INPUT")+"] "+str(string)
 
 # Codon functions
 bases = ["A", "C", "G", "T"]

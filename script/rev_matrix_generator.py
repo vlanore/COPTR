@@ -1,4 +1,4 @@
-# Copyright or © or Copr. Centre National de la Recherche Scientifique (CNRS) (2017/11/27)
+# Copyright or Copr. Centre National de la Recherche Scientifique (CNRS) (2017/11/27)
 # Contributors:
 # - Vincent Lanore <vincent.lanore@gmail.com>
 
