@@ -40,7 +40,7 @@ else:
         mystr = ""
         mystr += str(2**n)+" "+str(length)+'\n'
         lastcodon = ""
-        for i in range(2**(n-1)):
+        for i in range(2**(n)):
             codon = mutate(selected_codon(), 20)
             codon2 = mutate(codon, 80)
             # codon2 = rand_codon()
