@@ -40,7 +40,7 @@ else:
         mystr = ""
         mystr += str(2**n)+" "+str(length)+'\n'
         lastcodon = ""
-        for i in range(2**(n)):
+        for i in range(2**(n-1)):
             codon = mutate(selected_codon(), 20)
             codon2 = mutate(codon, 80)
             # codon2 = rand_codon()
@@ -53,6 +53,6 @@ else:
     treefile = open(fn+".tree", "w+")
     alifile = open(fn+".ali", "w+")
 
-    a,b = tree(n, 0, "")
+    a,b = tree(n-1, 0, "")
     treefile.write(a)
     alifile.write(align(3))
