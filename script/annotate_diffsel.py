@@ -33,11 +33,14 @@ print(step("Parsing command line arguments"))
 from argparse import ArgumentParser, FileType
 parser = ArgumentParser(description='Annotates a phylogenetic trees with condition numbers compatible with diffsel.')
 parser.add_argument('inputFile', metavar="input", type=FileType('r'), nargs=1, help='the sequence file (phylip format)')
+parser.add_argument('-s', '--sister-branch-cond', dest="sister", action='store_true', help="toggle the use of a different condition for the sister branches of convergent branches")
 
 args = parser.parse_args()
 
 tree_file = args.inputFile[0]
 print("-- Sequence file is "+param(tree_file.name))
+sister = args.sister
+print("-- Sister branch condition: "+param(sister))
 out_file = tree_file.name+".annotated"
 print("-- Output file is "+param(out_file))
 
@@ -45,12 +48,12 @@ print("-- Output file is "+param(out_file))
 #===================================================================================================
 print(step("Tree retrieval and preparation"))
 
-print(" -- Reading tree from file")
+print("-- Reading tree from file")
 t = Tree(tree_file.name)
 
-print(" -- Setting all branch lengths to "+data(1))
+print("-- Setting all branch lengths to "+data(0))
 for n in t.traverse():
-    n.dist = 1 # using dist as condition
+    n.dist = 0 # using dist as condition
 
 
 #===================================================================================================
@@ -63,6 +66,10 @@ nstyle["fgcolor"] = "darkred"
 nstyle2 = NodeStyle()
 nstyle2["size"] = 20
 nstyle2["fgcolor"] = "blue"
+
+nstyle3 = NodeStyle()
+nstyle3["size"] = 20
+nstyle3["fgcolor"] = "green"
 
 print("-- Numbering nodes")
 i=0
@@ -83,8 +90,12 @@ while True:
         for st_canditate in t.traverse():
             if i == nb:
                 for n in st_canditate.traverse():
-                    n.dist=2
+                    n.dist=1
                     n.set_style(nstyle)
+                if sister:
+                    for n in st_canditate.get_sisters()[0].traverse():
+                        n.dist=2
+                        n.set_style(nstyle3)
             i += 1
     else:
         print("-- Input was not an integer; finished selection of subtrees")
