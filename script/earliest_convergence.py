@@ -29,7 +29,7 @@ def tracecomp(file1, file2, burnin):
         remove("./tmp.tracecomp.contdiff")
 
     INFO("Running tracecomp with burnin : "+data(burnin))
-    process = Popen([path+"/tracecomp -x "+str(burnin)+" -o tmp.tracecomp "+chain1+" "+chain2], shell=True, stdout=PIPE, stderr=PIPE)
+    process = Popen([path+"/tracecomp -x "+str(burnin)+" -o tmp.tracecomp "+file1+" "+file2], shell=True, stdout=PIPE, stderr=PIPE)
     result = process.wait()
 
     if result == 0 and isfile("tmp.tracecomp.contdiff"): # FIXME pretty sure tracecomp doesn't actually return 1 when something goes wrong
@@ -52,17 +52,25 @@ def tracecomp(file1, file2, burnin):
         print(process.communicate()[1].decode("ascii"))
 
 def truncate(f, lines):
-    process = Popen(["head -n "+str(lines)+" "+f+" > tmp.truncated.data"], shell=True, stdout=PIPE, stderr=PIPE)
+    process = Popen(["head -n "+str(lines)+" "+f+".trace > "+f+"_truncated.trace"], shell=True, stdout=PIPE, stderr=PIPE)
     result = process.wait()
 
 STEP("Running tracecomp")
 
+stepsize = int(args["--step-size"][0])
+upto = stepsize
+
 iterations = min(sum(1 for line in open(chain1+".trace")), sum(1 for line in open(chain2+".trace"))) - 1
 INFO("Traces contain "+data(iterations)+" iterations")
 
-burnin = int(int(args["--burnin"][0]) * iterations / 100.)
-INFO("Burnin set to "+data(burnin)+" iterations")
+while upto < iterations:
+    burnin = int(int(args["--burnin"][0]) * upto / 100.)
+    truncate(chain1, upto+1)
+    truncate(chain2, upto+1)
 
-tracecomp(chain1+".trace", chain2+".trace", burnin)
+    INFO("Burnin set to "+data(burnin)+" iterations")
 
-truncate(chain1+".trace", 50)
+    tracecomp(chain1+"_truncated", chain2+"_truncated", burnin)
+
+    upto += stepsize
+
