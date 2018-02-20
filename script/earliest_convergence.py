@@ -14,6 +14,7 @@ Options:
 
 from utils import *
 
+#===================================================================================================
 STEP("Parsing command line arguments")
 
 args = getargs(__doc__)
@@ -22,6 +23,7 @@ path = args["--tracecomp-path"][0]
 chain1 = args["<trace1>"]
 chain2 = args["<trace2>"]
 
+#===================================================================================================
 def tracecomp(file1, file2, burnin, mute=True):
     INFO("Removing old tracecomp output file if present", mute)
     if isfile("./tmp.tracecomp.contdiff"):
@@ -57,6 +59,7 @@ def truncate(f, lines):
     process = Popen(["head -n "+str(lines)+" "+f+".trace > "+f+"_truncated.trace"], shell=True, stdout=PIPE, stderr=PIPE)
     result = process.wait()
 
+#===================================================================================================
 STEP("Running tracecomp")
 
 stepsize = int(args["--step-size"][0])
@@ -81,7 +84,7 @@ while upto < iterations:
         if first == 0:
             first = upto
     elif tracecomp(chain1+"_truncated", chain2+"_truncated", burnin) == 1:
-        print("[{}]".format(utils.yellow(str(upto))), end='')
+        print("[.{}]".format(utils.yellow(str(upto))), end='')
         first = 0
     else:
         print("[/{}]".format(utils.red(str(upto))), end='')
