@@ -40,12 +40,15 @@ def tracecomp(file1, file2, burnin, mute=True):
         maxrel = max(tracecomp_data.rel_diff)
         INFO("Minimum effsize is "+data(mineff)+" and maximum rel_diff is "+data(maxrel), mute)
 
-        if mineff < 50 or maxrel > 0.3:
+        if mineff > 100 and maxrel < 0.1:
+            GOOD("The chains converged strongly!", mute)
+            return 2
+        elif mineff < 50 or maxrel > 0.3:
             BAD("The chains do not seem to have converged!", mute)
-            return False
+            return 0
         else:
             GOOD("The chains seem to have converged!", mute)
-            return True
+            return 1
     else:
         ERROR("Something went wrong with tracecomp!\n\tOutput of command was:\n")
         print(process.communicate()[1].decode("ascii"))
@@ -73,12 +76,15 @@ while upto < iterations:
 
     INFO("Burnin set to "+data(burnin)+" iterations", True)
 
-    if tracecomp(chain1+"_truncated", chain2+"_truncated", burnin):
-        print("[{}]".format(utils.boldgreen(str(upto))), end='')
+    if tracecomp(chain1+"_truncated", chain2+"_truncated", burnin) == 2:
+        print("[{}]".format(utils.green(str(upto))), end='')
         if first == 0:
             first = upto
+    elif tracecomp(chain1+"_truncated", chain2+"_truncated", burnin) == 1:
+        print("[{}]".format(utils.yellow(str(upto))), end='')
+        first = 0
     else:
-        print("[/{}]".format(utils.boldred(str(upto))), end='')
+        print("[/{}]".format(utils.red(str(upto))), end='')
         first = 0
 
     upto += stepsize

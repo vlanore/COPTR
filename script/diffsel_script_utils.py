@@ -39,6 +39,7 @@ if sys.stdout.isatty():
         HEADER = '\033[95m'
         OKBLUE = '\033[34m'
         OKGREEN = '\033[32m'
+        YELLOW = '\033[33m'
         WARNING = '\033[93m'
         CYAN = '\033[33m'
         FAIL = '\033[91m'
@@ -60,6 +61,12 @@ else:
 def boldred(string):
     return bcolors.FAIL+bcolors.BOLD+string+bcolors.ENDC
 
+def red(string):
+    return bcolors.FAIL+string+bcolors.ENDC
+
+def yellow(string):
+    return bcolors.YELLOW+string+bcolors.ENDC
+
 def boldcyan(string):
     return bcolors.CYAN+bcolors.BOLD+string+bcolors.ENDC
 
@@ -74,6 +81,9 @@ def step(string):
 
 def boldgreen(string):
     return bcolors.BOLD+bcolors.OKGREEN+string+bcolors.ENDC
+
+def green(string):
+    return bcolors.OKGREEN+string+bcolors.ENDC
 
 def good(string):
     return "-- ("+bcolors.OKGREEN+"Good"+bcolors.ENDC+") "+string
