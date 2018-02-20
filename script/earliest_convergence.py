@@ -22,30 +22,29 @@ path = args["--tracecomp-path"][0]
 chain1 = args["<trace1>"]
 chain2 = args["<trace2>"]
 
-def tracecomp(file1, file2, burnin):
-
-    INFO("Removing old tracecomp output file if present")
+def tracecomp(file1, file2, burnin, mute=True):
+    INFO("Removing old tracecomp output file if present", mute)
     if isfile("./tmp.tracecomp.contdiff"):
         remove("./tmp.tracecomp.contdiff")
 
-    INFO("Running tracecomp with burnin : "+data(burnin))
+    INFO("Running tracecomp with burnin : "+data(burnin), mute)
     process = Popen([path+"/tracecomp -x "+str(burnin)+" -o tmp.tracecomp "+file1+" "+file2], shell=True, stdout=PIPE, stderr=PIPE)
     result = process.wait()
 
     if result == 0 and isfile("tmp.tracecomp.contdiff"): # FIXME pretty sure tracecomp doesn't actually return 1 when something goes wrong
-        INFO("Tracecomp executed; results stored in "+data("tmp.tracecomp.contdiff"))
+        INFO("Tracecomp executed; results stored in "+data("tmp.tracecomp.contdiff"), mute)
 
         tracecomp_data = pd.read_csv("./tmp.tracecomp.contdiff", sep='\t')
 
         mineff = min(tracecomp_data.effsize)
         maxrel = max(tracecomp_data.rel_diff)
-        INFO("Minimum effsize is "+data(mineff)+" and maximum rel_diff is "+data(maxrel))
+        INFO("Minimum effsize is "+data(mineff)+" and maximum rel_diff is "+data(maxrel), mute)
 
         if mineff < 50 or maxrel > 0.3:
-            BAD("The chains do not seem to have converged!")
+            BAD("The chains do not seem to have converged!", mute)
             return False
         else:
-            GOOD("The chains seem to have converged!")
+            GOOD("The chains seem to have converged!", mute)
             return True
     else:
         ERROR("Something went wrong with tracecomp!\n\tOutput of command was:\n")
@@ -63,14 +62,30 @@ upto = stepsize
 iterations = min(sum(1 for line in open(chain1+".trace")), sum(1 for line in open(chain2+".trace"))) - 1
 INFO("Traces contain "+data(iterations)+" iterations")
 
+INFO("Running tracecomp with an increasing number of iterations (every "+data(stepsize)+" until "+data(iterations)+"):")
+first = 0
+count = 0
+print("    ", end='')
 while upto < iterations:
     burnin = int(int(args["--burnin"][0]) * upto / 100.)
     truncate(chain1, upto+1)
     truncate(chain2, upto+1)
 
-    INFO("Burnin set to "+data(burnin)+" iterations")
+    INFO("Burnin set to "+data(burnin)+" iterations", True)
 
-    tracecomp(chain1+"_truncated", chain2+"_truncated", burnin)
+    if tracecomp(chain1+"_truncated", chain2+"_truncated", burnin):
+        print("[{}]".format(utils.boldgreen(str(upto))), end='')
+        if first == 0:
+            first = upto
+    else:
+        print("[/{}]".format(utils.boldred(str(upto))), end='')
+        first = 0
 
     upto += stepsize
+    count += 1
+    if count == 12:
+        print("\n    ", end='')
+        count = 0
 
+print("")
+INFO("First convergent iteration is "+data(first))

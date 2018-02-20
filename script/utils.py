@@ -22,20 +22,25 @@ def to_str(thing):
     else:
         return str(thing)
 
-def STEP(s):
-    print(utils.step(s))
+def STEP(s, mute = False):
+    if not mute:
+        print(utils.step(s))
 
-def INFO(s):
-    print("-- "+s)
+def INFO(s, mute = False):
+    if not mute:
+        print("-- "+s)
 
-def ERROR(s):
-    print("\n\t["+utils.boldred("Error")+"] "+s)
+def ERROR(s, mute = False):
+    if not mute:
+        print("\n\t["+utils.boldred("Error")+"] "+s)
 
-def BAD(s):
-    print(utils.bad(s))
+def BAD(s, mute = False):
+    if not mute:
+        print(utils.bad(s))
 
-def GOOD(s):
-    print(utils.good(s))
+def GOOD(s, mute = False):
+    if not mute:
+        print(utils.good(s))
 
 def getargs(s):
     args = docopt(s)
