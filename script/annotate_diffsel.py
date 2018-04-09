@@ -83,7 +83,7 @@ for n in t.traverse():
 print("-- Starting subtree selection")
 while True:
     t.show()
-    data = raw_input(ask_input("Please enter start of convergent subtree: "))
+    data = input(ask_input("Please enter start of convergent subtree: "))
     if data.isdigit():
         nb = int(data)
         i = 0
